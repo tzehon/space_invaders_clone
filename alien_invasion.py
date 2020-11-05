@@ -30,6 +30,13 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self.bullets.update()
+
+            # Get rid of bullets that have disappeared.
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
+            print(len(self.bullets))
+            
             self._update_screen()
 
     def _check_events(self):
@@ -71,7 +78,7 @@ class AlienInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
-            
+
         pygame.display.flip()
 
 if __name__ == '__main__':
