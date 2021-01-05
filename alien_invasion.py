@@ -26,9 +26,9 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
 
-        self.create_fleet()
+        self._create_fleet()
 
-    def create_fleet(self):
+    def _create_fleet(self):
         """Create the fleet of aliens."""
         # Create an alien and find the number of aliens in a row.
         # Spacing between each alien is equal to one alien width.
@@ -39,11 +39,15 @@ class AlienInvasion:
 
         # Create the first row of aliens.
         for alien_number in range(number_aliens_x):
-            # Create an alien and place it in row.
-            alien = Alien(self)
-            alien.x = alien_width + 2 * alien_width * alien_number
-            alien.rect.x = alien.x
-            self.aliens.add(alien)
+            self._create_alien(alien_number)
+            
+    def _create_alien(self, alien_number):
+        """Create an alien and place it in the row."""
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        self.aliens.add(alien)
 
     def run_game(self):
         """Start the main loop for the game."""
