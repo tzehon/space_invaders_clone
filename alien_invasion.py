@@ -78,11 +78,14 @@ class AlienInvasion:
         """Start the main loop for the game."""
         while True:
             self._check_events()
-            self.ship.update()
-            # Update bullet positions.
-            self.bullets.update()
-            self._update_bullets()
-            self._update_aliens()
+
+            if self.stats.game_active:
+                self.ship.update()
+                # Update bullet positions.
+                self.bullets.update()
+                self._update_bullets()
+                self._update_aliens()
+            
             self._update_screen()
 
     def _update_aliens(self):
@@ -110,20 +113,22 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
+        if self.stats.ships_left > 0:
+            # Decrement ships_left.
+            self.stats.ships_left -= 1
 
-        # Decrement ships_left.
-        self.stats.ships_left -= 1
+            # Get rid of any remaining aliens and bullets.
+            self.aliens.empty()
+            self.bullets.empty()
 
-        # Get rid of any remaining aliens and bullets.
-        self.aliens.empty()
-        self.bullets.empty()
+            # Create a new fleet and centre the ship.
+            self._create_fleet()
+            self.ship.centre_ship()
 
-        # Create a new fleet and centre the ship.
-        self._create_fleet()
-        self.ship.centre_ship()
-
-        # Pause.
-        sleep(0.5)
+            # Pause.
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
 
     def _check_bullet_alien_collisions(self):
         """Respond to bullet-alien collisions."""
